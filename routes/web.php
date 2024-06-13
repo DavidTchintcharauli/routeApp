@@ -41,6 +41,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/routes/calculator', function () {
         return Inertia::render('routes/Calculator');
     })->name('routes/calculator');
+
+    Route::get('/routes/todo', function () {
+        return Inertia::render('routes/Todo');
+    })->name('routes/todo');
 });
 
 Route::middleware('auth')->group(function () {

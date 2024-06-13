@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import NavLink from '@/Components/NavLink';
 
-export default function information({ auth }) {
+export default function Information({ auth }) {
     return (
         <AuthenticatedLayout
             user={auth.user}

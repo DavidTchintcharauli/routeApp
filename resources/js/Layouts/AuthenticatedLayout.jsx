@@ -33,6 +33,9 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('routes/calculator')} active={route().current('routes/calculator')}>
                                     Calculator
                                 </NavLink>
+                                <NavLink href={route('routes/todo')} active={route().current('routes/todo')}>
+                                    Todo
+                                </NavLink>
                             </div>
                         </div>
 
