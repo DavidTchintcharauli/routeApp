@@ -1,11 +1,31 @@
 import NavLink from '@/Components/NavLink';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Calculator({ auth }) {
     const [input, setInput] = useState('');
     const [result, setResult] = useState('');
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            const { key } = event;
+            if (/[\d.+\-*/=]|Backspace|Delete|Enter/.test(key)) {
+                event.preventDefault();
+                if (key === 'Delete' || key === 'Backspace') {
+                    setInput(input.slice(0, -1));
+                } else if (key === '=' || key === 'Enter') {
+                    calculateResult();
+                } else {
+                    setInput(input + key);
+                }
+            }
+        };
+    
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [input]);
+    
 
     const handleButtonClick = (value) => {
         setInput(input + value);
@@ -23,6 +43,7 @@ export default function Calculator({ auth }) {
         setInput('');
         setResult('');
     };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -33,8 +54,7 @@ export default function Calculator({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">here is Calculator</div>
-                        <div className="max-w-md mx-auto p-4 bg-gray-100 rounded-md shadow-md">
+                        <div className="max-w-md mx-auto p-4 bg-gray-300 rounded-md mb-10 mt-10 shadow-md">
                             <h1 className="text-2xl font-bold mb-4">Calculator</h1>
                             <div className="mb-4">
                                 <input
