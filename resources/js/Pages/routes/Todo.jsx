@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import NavLink from '@/Components/NavLink';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 export default function Todo({ auth }) {
     const [tasks, setTasks] = useState([]);
@@ -9,14 +9,25 @@ export default function Todo({ auth }) {
     const [editing, setEditing] = useState(null);
     const [taskEdit, setTaskEdit] = useState('');
 
-    const addTask = () => {
+    useEffect(() => {
+        fetchTasks();
+    }, []);
+
+    const fetchTasks = async () => {
+        const response = await axios.get('/todos');
+        setTasks(response.data);
+    };
+
+    const addTask = async () => {
         if (task) {
-            setTasks([...tasks, { id: Date.now(), task, creator: 'currentUser', done: false }]);
+            const response = await axios.post('/todos', { task });
+            setTasks([...tasks, response.data]);
             setTask('');
         }
     };
 
-    const deleteTask = (id) => {
+    const deleteTask = async (id) => {
+        await axios.delete(`/todos/${id}`);
         setTasks(tasks.filter(t => t.id !== id));
     };
 
@@ -25,15 +36,19 @@ export default function Todo({ auth }) {
         setTaskEdit(tasks.find(t => t.id === id).task);
     };
 
-    const updateTask = (id) => {
-        setTasks(tasks.map(t => (t.id === id ? { ...t, task: taskEdit } : t)));
+    const updateTask = async (id) => {
+        const response = await axios.put(`/todos/${id}`, { task: taskEdit });
+        setTasks(tasks.map(t => (t.id === id ? response.data : t)));
         setEditing(null);
         setTaskEdit('');
     };
 
-    const markDone = (id) => {
-        setTasks(tasks.map(t => (t.id === id ? { ...t, done: !t.done } : t)));
+    const markDone = async (id) => {
+        const task = tasks.find(t => t.id === id);
+        const response = await axios.put(`/todos/${id}`, { task: task.task, done: !task.done });
+        setTasks(tasks.map(t => (t.id === id ? response.data : t)));
     };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -45,7 +60,7 @@ export default function Todo({ auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">here is Toto</div>
-                        <div className="max-w-prose mx-auto p-4 bg-gray-100 rounded-md mb-10 shadow-md">
+                        <div className="max-w-prose mb-10 mx-auto p-4 bg-gray-100 rounded-md shadow-md">
                             <h1 className="text-2xl font-bold mb-4">Todo List</h1>
                             <div className="mb-4">
                                 <input
