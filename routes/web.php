@@ -25,13 +25,19 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
 
-Route::get('/about', function () {
-    return Inertia::render('About');
-})->middleware(['auth', 'verified'])->name('about');
+    Route::get('/routes/about', function () {
+        return Inertia::render('routes/About');
+    })->name('routes/about');
+    
+    Route::get('/routes/information', function () {
+        return Inertia::render('routes/Information');
+    })->name('routes/information');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
