@@ -13,7 +13,7 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $todos = Todo::where('creator_user_id', Auth::id())->get();
+        $todos = Todo::with('creator')->where('creator_user_id', Auth::id())->get();
         return response()->json($todos);
     }
 
@@ -37,7 +37,7 @@ class TodoController extends Controller
         $todo->creator_user_id = Auth::id();
         $todo->save();
 
-        return response()->json($todo);
+        return response()->json($todo->load('creator'));
     }
 
     /**
@@ -68,7 +68,7 @@ class TodoController extends Controller
         $todo->done = $request->has('done') ? $request->done : $todo->done;
         $todo->save();
 
-        return response()->json($todo);
+        return response()->json($todo->load('creator'));
     }
 
     /**

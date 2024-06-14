@@ -48,6 +48,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/routes/todo', function () {
         return Inertia::render('routes/Todo');
     })->name('routes/todo');
+
+    Route::get('/routes/tictactoe', function () {
+        return Inertia::render('routes/TicTacToe');
+    })->name('routes/tictactoe');
 });
 
 Route::middleware('auth')->group(function () {
