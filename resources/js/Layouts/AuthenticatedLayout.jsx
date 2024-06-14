@@ -36,8 +36,11 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('routes/todo')} active={route().current('routes/todo')}>
                                     Todo
                                 </NavLink>
-                                <NavLink href={route('routes/tictactoe')} active={route().current('routes/tictactoe')}>
+                                <NavLink href={route('routes/ticTacToe')} active={route().current('routes/ticTacToe')}>
                                     TicTacToe
+                                </NavLink>
+                                <NavLink href={route('routes/createTest')} active={route().current('routes/createTest')}>
+                                    Create Test
                                 </NavLink>
                             </div>
                         </div>

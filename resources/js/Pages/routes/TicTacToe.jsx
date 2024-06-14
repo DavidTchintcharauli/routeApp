@@ -43,7 +43,7 @@ export default function TicTacToe({ auth }) {
                         <div className="p-6 text-gray-900">
                             <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
                                 <div className="p-8">
-                                    <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold mb-4">{status}</div>
+                                    <div className="uppercase tracking-wide text-sm m-auto text-indigo-500 font-semibold mb-4">{status}</div>
                                     <div className="grid grid-cols-3 gap-2">
                                         {renderSquare(0)}
                                         {renderSquare(1)}

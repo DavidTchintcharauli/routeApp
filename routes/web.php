@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\TestsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -49,9 +50,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('routes/Todo');
     })->name('routes/todo');
 
-    Route::get('/routes/tictactoe', function () {
+    Route::get('/routes/ticTacToe', function () {
         return Inertia::render('routes/TicTacToe');
-    })->name('routes/tictactoe');
+    })->name('routes/ticTacToe');
+
+    Route::get('/routes/createTest', function () {
+        return Inertia::render('routes/CreateTest');
+    })->name('routes/createTest');
+
+    Route::post('/routes/createTest', [TestsController::class, 'store'])->name('tests.store');
 });
 
 Route::middleware('auth')->group(function () {
@@ -59,5 +66,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';
