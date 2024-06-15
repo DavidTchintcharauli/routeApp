@@ -20,4 +20,9 @@ class Test extends Model
     {
         return $this->hasMany(Question::class);
     }
+
+    public function tests()
+    {
+        return $this->hasMany(Test::class, 'test');
+    }
 }

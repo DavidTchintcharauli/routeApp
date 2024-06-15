@@ -28,6 +28,7 @@ Route::get('/', function () {
 });
 
 Route::resource('todos', TodoController::class);
+Route::resource('tests', TestsController::class);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
@@ -59,6 +60,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('routes/createTest');
 
     Route::post('/routes/createTest', [TestsController::class, 'store'])->name('tests.store');
+
+     Route::get('/routes/testList', function () {
+        return Inertia::render('routes/TestList');
+    })->name('routes/testList');
 });
 
 Route::middleware('auth')->group(function () {

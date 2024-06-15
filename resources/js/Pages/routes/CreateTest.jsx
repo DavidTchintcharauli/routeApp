@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import NavLink from '@/Components/NavLink';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
 
@@ -7,6 +8,7 @@ export default function CreateTest({ auth }) {
     const [test, setTest] = useState('');
     const [questions, setQuestions] = useState([{ question: '', answers: [{ answer: '', isCorrect: false }] }]);
     const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
 
     const handleTestChange = (e) => {
         setTest(e.target.value);
@@ -48,15 +50,16 @@ export default function CreateTest({ auth }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setMessage('');
         try {
-            await axios.post('/routes/createTest', { test, questions });
-            // Reset form
+            const response = await axios.post('/routes/createTest', { test, questions });
             setTest('');
             setQuestions([{ question: '', answers: [{ answer: '', isCorrect: false }] }]);
-            // Provide feedback to the user
             setMessage('Test successfully created!');
         } catch (error) {
             console.error('Error creating test:', error);
+            setError('Failed to create test. Please try again later.');
         }
     };
 
@@ -70,6 +73,7 @@ export default function CreateTest({ auth }) {
                             <div className="max-w-2xl mx-auto">
                                 <h1 className="text-2xl font-bold mb-4">Create a New Test</h1>
                                 {message && <div className="mb-4 text-green-500">{message}</div>}
+                                {error && <div className="mb-4 text-red-500">{error}</div>}
                                 <div className="mb-6">
                                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="testName">
                                         Test Name
@@ -138,12 +142,10 @@ export default function CreateTest({ auth }) {
                                 >
                                     Submit Test
                                 </button>
-                                <button
-                                    className="mt-4 ml-4 px-3 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-200"
-                                    onClick={() => window.location.href='/routes/testsList'}
-                                >
-                                    Go to Test List
-                                </button>
+                                <NavLink className="ml-4 px-3 py-2 pt-2 bg-gray-500 text-white rounded-md hover:bg-gray-400 transition duration-200"
+                                    href={route('routes/testList')} active={route().current('routes/testList')}>
+                                    <button>Go to Test List</button>
+                                </NavLink>
                             </div>
                         </div>
                     </div>

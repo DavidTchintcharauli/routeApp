@@ -105,8 +105,8 @@ export default function Todo({ auth }) {
                                                     <button className="px-3 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200" onClick={() => updateTask(t.id)}>Update</button>
                                                 ) : (
                                                     <>
-                                                        <button className="px-3 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onClick={() => editTask(t.id)}>Edit</button>
-                                                        <button className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200" onClick={() => deleteTask(t.id)}>Delete</button>
+                                                        <button className="px-3 py-2 mr-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition duration-200" onClick={() => editTask(t.id)}>Edit</button>
+                                                        <button className="px-3 py-2 mr-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200" onClick={() => deleteTask(t.id)}>Delete</button>
                                                         <button className="px-3 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-200" onClick={() => markDone(t.id)}>{t.done ? 'Undo' : 'Done'}</button>
                                                     </>
                                                 )}

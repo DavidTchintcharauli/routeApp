@@ -8,7 +8,7 @@ export default function Information({ auth }) {
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Information</h2>}
         >
-            <Head title="Dashboard" />
+            <Head title="Information" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
