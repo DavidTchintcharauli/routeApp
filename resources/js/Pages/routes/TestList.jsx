@@ -25,6 +25,17 @@ export default function TestsList({ auth }) {
         setSelectedTestId(null);
     };
 
+    const handleDeleteTest = async (testId) => {
+        if (confirm("Are you sure you want to delete this test?")) {
+            try {
+                await axios.delete(`/tests/${testId}`);
+                fetchTests(); // Refresh the test list after deletion
+            } catch (error) {
+                console.error("There was an error deleting the test!", error);
+            }
+        }
+    };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
@@ -45,16 +56,29 @@ export default function TestsList({ auth }) {
                                         <thead>
                                             <tr className="bg-gray-100">
                                                 <th className="px-4 py-2 text-left">Test</th>
+                                                <th className="px-4 py-2 text-left">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {tests.map((t) => (
                                                 <tr 
                                                     key={t.id} 
-                                                    className={`border-t ${t.done ? 'line-through' : ''} hover:bg-gray-50 cursor-pointer`} 
-                                                    onClick={() => handleTestClick(t.id)}
+                                                    className={`border-t ${t.done ? 'line-through' : ''} hover:bg-gray-50`}
                                                 >
-                                                    <td className="px-4 py-2">{t.test}</td>
+                                                    <td 
+                                                        className="px-4 py-2 cursor-pointer"
+                                                        onClick={() => handleTestClick(t.id)}
+                                                    >
+                                                        {t.test}
+                                                    </td>
+                                                    <td className="px-4 py-2">
+                                                        <button
+                                                            onClick={() => handleDeleteTest(t.id)}
+                                                            className="bg-red-500 text-white px-4 py-2 rounded"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>

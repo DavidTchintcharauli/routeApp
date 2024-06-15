@@ -74,4 +74,11 @@ class TestsController extends Controller
         $score = ($correctCount / $totalCount) * 100;
         return response()->json(['score' => $score]);
     }
+
+    public function destroy($id)
+    {
+        $test = Test::findOrFail($id);
+        $test->delete();
+        return response()->json(['message' => 'Test deleted successfully']);
+    }
 }

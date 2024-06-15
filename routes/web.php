@@ -30,43 +30,32 @@ Route::get('/', function () {
 Route::resource('todos', TodoController::class);
 Route::resource('tests', TestsController::class);
 Route::post('/tests/{id}/submit', [TestsController::class, 'submit']);
+Route::get('/tests', [TestsController::class, 'index']);
+Route::delete('/tests/{id}', [TestsController::class, 'destroy']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
 
-    Route::get('/routes/about', function () {
-        return Inertia::render('routes/About');
-    })->name('routes/about');
-    
-    Route::get('/routes/information', function () {
-        return Inertia::render('routes/Information');
-    })->name('routes/information');
+    $routes = [
+        'about' => 'About',
+        'information' => 'Information',
+        'calculator' => 'Calculator',
+        'todo' => 'Todo',
+        'ticTacToe' => 'TicTacToe',
+        'createTest' => 'CreateTest',
+        'testList' => 'TestList'
+    ];
 
-    Route::get('/routes/calculator', function () {
-        return Inertia::render('routes/Calculator');
-    })->name('routes/calculator');
-
-    Route::get('/routes/todo', function () {
-        return Inertia::render('routes/Todo');
-    })->name('routes/todo');
-
-    Route::get('/routes/ticTacToe', function () {
-        return Inertia::render('routes/TicTacToe');
-    })->name('routes/ticTacToe');
-
-    Route::get('/routes/createTest', function () {
-        return Inertia::render('routes/CreateTest');
-    })->name('routes/createTest');
+    foreach ($routes as $route => $component) {
+        Route::get("/routes/{$route}", function () use ($component) {
+            return Inertia::render("routes/{$component}");
+        })->name("routes/{$route}");
+    }
 
     Route::post('/routes/createTest', [TestsController::class, 'store'])->name('tests.store');
-
-     Route::get('/routes/testList', function () {
-        return Inertia::render('routes/TestList');
-    })->name('routes/testList');
 });
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
