@@ -68,6 +68,12 @@ export default function CreateTest({ auth, testId, closeDetail = () => {} }) {
         setQuestions(newQuestions);
     };
 
+    const removeQuestion = (qIndex) => {
+        const newQuestions = [...questions];
+        newQuestions.splice(qIndex, 1);
+        setQuestions(newQuestions);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -145,7 +151,7 @@ export default function CreateTest({ auth, testId, closeDetail = () => {} }) {
                                                     className="ml-2 px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
                                                     onClick={() => removeAnswer(qIndex, aIndex)}
                                                 >
-                                                    Remove
+                                                    Remove Answer
                                                 </button>
                                             </div>
                                         ))}
@@ -154,6 +160,12 @@ export default function CreateTest({ auth, testId, closeDetail = () => {} }) {
                                             onClick={() => addAnswer(qIndex)}
                                         >
                                             Add Answer
+                                        </button>
+                                        <button
+                                            className="mt-2 ml-2 px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-200"
+                                            onClick={() => removeQuestion(qIndex)}
+                                        >
+                                            Remove Question
                                         </button>
                                     </div>
                                 ))}
