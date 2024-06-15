@@ -29,6 +29,7 @@ Route::get('/', function () {
 
 Route::resource('todos', TodoController::class);
 Route::resource('tests', TestsController::class);
+Route::post('/tests/{id}/submit', [TestsController::class, 'submit']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {

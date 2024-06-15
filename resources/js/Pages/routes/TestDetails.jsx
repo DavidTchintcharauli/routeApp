@@ -3,6 +3,9 @@ import axios from 'axios';
 
 export default function TestDetail({ testId, closeDetail }) {
     const [testDetails, setTestDetails] = useState(null);
+    const [selectedAnswers, setSelectedAnswers] = useState({});
+    const [submitted, setSubmitted] = useState(false);
+    const [score, setScore] = useState(null);
 
     useEffect(() => {
         if (testId) {
@@ -16,6 +19,23 @@ export default function TestDetail({ testId, closeDetail }) {
             setTestDetails(response.data);
         } catch (error) {
             console.error("Error fetching test details", error);
+        }
+    };
+
+    const handleAnswerSelect = (questionId, answerId) => {
+        setSelectedAnswers(prev => ({
+            ...prev,
+            [questionId]: answerId
+        }));
+    };
+
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(`/tests/${testId}/submit`, { selectedAnswers });
+            setScore(response.data.score);
+            setSubmitted(true);
+        } catch (error) {
+            console.error("Error submitting test answers", error);
         }
     };
 
@@ -39,8 +59,12 @@ export default function TestDetail({ testId, closeDetail }) {
                         <ul className="mt-2 space-y-2">
                             {question.answers.map(answer => (
                                 <li 
-                                    key={answer.id} 
-                                    className={`px-3 py-2 rounded ${answer.is_correct ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
+                                    key={answer.id}
+                                    onClick={() => handleAnswerSelect(question.id, answer.id)}
+                                    className={`px-3 py-2 rounded cursor-pointer 
+                                        ${selectedAnswers[question.id] === answer.id ? 'bg-blue-200' : 'bg-gray-100'} 
+                                        ${submitted && answer.is_correct ? 'bg-green-100 text-green-800' : ''} 
+                                        ${submitted && selectedAnswers[question.id] === answer.id && !answer.is_correct ? 'bg-red-100 text-red-800' : ''}`}
                                 >
                                     {answer.answer}
                                 </li>
@@ -49,6 +73,19 @@ export default function TestDetail({ testId, closeDetail }) {
                     </li>
                 ))}
             </ul>
+            {!submitted && (
+                <button 
+                    onClick={handleSubmit} 
+                    className="bg-green-500 text-white px-4 py-2 rounded-md mt-4 hover:bg-green-600"
+                >
+                    Submit
+                </button>
+            )}
+            {submitted && (
+                <div className="mt-4 text-lg">
+                    <strong>Score: {score}%</strong>
+                </div>
+            )}
         </div>
     );
 }
