@@ -32,6 +32,7 @@ Route::resource('tests', TestsController::class);
 Route::post('/tests/{id}/submit', [TestsController::class, 'submit']);
 Route::get('/tests', [TestsController::class, 'index']);
 Route::delete('/tests/{id}', [TestsController::class, 'destroy']);
+Route::put('/tests/{id}', [TestsController::class, 'update']);
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', function () {

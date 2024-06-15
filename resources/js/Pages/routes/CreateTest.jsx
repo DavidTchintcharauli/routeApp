@@ -1,14 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import NavLink from '@/Components/NavLink';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
 
-export default function CreateTest({ auth }) {
+export default function CreateTest({ auth, testId, closeDetail = () => {} }) {
     const [test, setTest] = useState('');
     const [questions, setQuestions] = useState([{ question: '', answers: [{ answer: '', isCorrect: false }] }]);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+
+    useEffect(() => {
+        if (testId) {
+            fetchTest(testId);
+        }
+    }, [testId]);
+
+    const fetchTest = async (id) => {
+        try {
+            const response = await axios.get(`/tests/${id}`);
+            const testData = response.data;
+            setTest(testData.test);
+            setQuestions(testData.questions.map(q => ({
+                question: q.question,
+                answers: q.answers.map(a => ({ answer: a.answer, isCorrect: a.is_correct }))
+            })));
+        } catch (error) {
+            console.error('Error fetching test:', error);
+        }
+    };
 
     const handleTestChange = (e) => {
         setTest(e.target.value);
@@ -53,25 +73,32 @@ export default function CreateTest({ auth }) {
         setError('');
         setMessage('');
         try {
-            const response = await axios.post('/routes/createTest', { test, questions });
+            const payload = { test, questions };
+            if (testId) {
+                await axios.put(`/tests/${testId}`, payload);
+                setMessage('Test successfully updated!');
+            } else {
+                await axios.post('/tests', payload);
+                setMessage('Test successfully created!');
+            }
             setTest('');
             setQuestions([{ question: '', answers: [{ answer: '', isCorrect: false }] }]);
-            setMessage('Test successfully created!');
+            closeDetail();
         } catch (error) {
-            console.error('Error creating test:', error);
-            setError('Failed to create test. Please try again later.');
+            console.error('Error creating/updating test:', error);
+            setError('Failed to create/update test. Please try again later.');
         }
     };
 
     return (
-        <AuthenticatedLayout user={auth.user} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Create Test</h2>}>
-            <Head title="Create Test" />
+        <AuthenticatedLayout user={auth.user} header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">{testId ? 'Edit Test' : 'Create Test'}</h2>}>
+            <Head title={testId ? 'Edit Test' : 'Create Test'} />
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <div className="max-w-2xl mx-auto">
-                                <h1 className="text-2xl font-bold mb-4">Create a New Test</h1>
+                                <h1 className="text-2xl font-bold mb-4">{testId ? 'Edit Test' : 'Create a New Test'}</h1>
                                 {message && <div className="mb-4 text-green-500">{message}</div>}
                                 {error && <div className="mb-4 text-red-500">{error}</div>}
                                 <div className="mb-6">
@@ -140,7 +167,7 @@ export default function CreateTest({ auth }) {
                                     className="mt-4 ml-4 px-3 py-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition duration-200"
                                     onClick={handleSubmit}
                                 >
-                                    Submit Test
+                                    {testId ? 'Update Test' : 'Submit Test'}
                                 </button>
                                 <NavLink className="ml-4 px-3 py-2 pt-2 bg-gray-500 text-white rounded-md hover:bg-gray-400 transition duration-200"
                                     href={route('routes/testList')} active={route().current('routes/testList')}>
